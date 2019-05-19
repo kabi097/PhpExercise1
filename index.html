@@ -161,7 +161,7 @@
                  document.form.gender.focus() ;
                  result = false;
               }
-              if (parseInt(document.form.age.value) < 18 || parseInt(document.form.age.value) > 99) {
+              if (isNaN(parseInt(document.form.age.value)) || parseInt(document.form.age.value) < 18 || parseInt(document.form.age.value) > 99) {
                  document.getElementById("age_error").innerHTML = "Wybierz wiek od 18 do 99";
                  document.form.age.focus() ;
                  result = false;
