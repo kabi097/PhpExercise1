@@ -119,16 +119,17 @@
                     <label for="email">Email</label>
                     <input type="text" id="email" name="email" placeholder="Email">
                     <p class="error" id="email_error"></p>
-                    <label for="sex">Płeć</label>
-                    <select id="country" name="country">
+                    <label for="gender">Płeć</label>
+                    <select id="gender" name="gender">
                       <option value="man">Mężczyzna</option>
                       <option value="woman">Kobieta</option>
                     </select>
+                    <p class="error" id="gender_error"></p>
                     <label for="age">Wiek</label>
                     <input type="number" name="age" placeholder="Wiek">                    
                     <p class="error" id="age_error"></p>
                     <input type="checkbox" name="policy" id="policy">
-                    <label for="policy" class="details">Wyrażam zgodę na przetwarzanie moich danych osobowych dla potrzeb niezbędnych do realizacji procesu rekrutacji (zgodnie z ustawą z dnia 10 maja 2018 roku o ochronie danych osobowych (Dz. Ustaw z 2018, poz. 1000) oraz zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (RODO)).0</label>
+                    <label for="policy" class="details">Wyrażam zgodę na przetwarzanie moich danych osobowych dla potrzeb niezbędnych do realizacji procesu rekrutacji (zgodnie z ustawą z dnia 10 maja 2018 roku o ochronie danych osobowych (Dz. Ustaw z 2018, poz. 1000) oraz zgodnie z Rozporządzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (RODO)).</label>
                     <p class="error" id="policy_error"></p>
                     <input type="submit"/>
                 </form>
@@ -136,25 +137,41 @@
     </main>
     <script type = "text/javascript">
            function validate() {
-              document.getElementsByClassName("error").forEach(element => {
-                  element.value = "";
+              document.querySelectorAll(".error").forEach(element => {
+                  element.innerHTML = "";
               });
-              if(document.form.firstname.value == "") {
-                 document.getElementById("firstname_error").value = "Pole nie może być puste";
+              let result = true;
+              if (document.form.firstname.value == "") {
+                 document.getElementById("firstname_error").innerHTML = "Pole nie może być puste";
                  document.form.firstname.focus() ;
-                 return false;
+                 result = false;
               }
-              if(document.form.lastname.value == "") {
-                document.getElementById("firstname_error").value = "Pole nie może być puste";
+              if (document.form.lastname.value == "") {
+                 document.getElementById("lastname_error").innerHTML = "Pole nie może być puste";
                  document.form.lastname.focus() ;
-                 return false;
+                 result = false;
               }
-              if( document.form.email.value == "" || !validateEmail(document.form.email.value)) {
-                document.getElementById("firstname_error").value = "Pole musi zawierać poprawny adres email";
+              if (document.form.email.value == "" || !validateEmail(document.form.email.value)) {
+                 document.getElementById("email_error").innerHTML = "Pole musi zawierać poprawny adres email";
                  document.form.email.focus() ;
-                 return false;
+                 result = false;
               }
-              return( true );
+              if (!(document.form.gender.options[document.form.gender.selectedIndex].value == "man" || document.form.gender.options[document.form.gender.selectedIndex].value == "woman")) {
+                 document.getElementById("gender_error").innerHTML = "Pole musi zawierać poprawną wartość";
+                 document.form.gender.focus() ;
+                 result = false;
+              }
+              if (parseInt(document.form.age.value) < 18 || parseInt(document.form.age.value) > 99) {
+                 document.getElementById("age_error").innerHTML = "Wybierz wiek od 18 do 99";
+                 document.form.age.focus() ;
+                 result = false;
+              }
+              if (!document.form.policy.checked) {
+                 document.getElementById("policy_error").innerHTML = "Pole musi być zaznaczone";
+                 document.form.policy.focus() ;
+                 result = false;
+              }
+              return result;
            }
 
            function validateEmail(email) {
