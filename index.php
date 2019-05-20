@@ -1,3 +1,29 @@
+<?php 
+
+require_once('src/Menu.php');
+
+$mysql_host = 'localhost'; 
+$port = '3307'; 
+$username = 'root';
+$password = 'pawelc24';
+$database = 'programa';
+
+$menu = new Menu($mysql_host, $port, $username, $password, $database);
+
+function showMenu($item, $key, $level) {
+    $className = ($level>1) ? 'third-level-menu' : 'second-level-menu';
+    echo '<li>';
+    echo "<a href='#'>".$item['name']."</a>";
+    if (isset($item['submenu']) && is_array($item['submenu'])) {
+        echo '<ul class="'.$className.'">';
+        array_walk($item['submenu'], 'showMenu', $level+1);
+        echo '</ul>';
+    }
+    echo '</li>';
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,9 +36,12 @@
 <body>
     <nav>
         <div id="menu">
-            <span class="hamburger"></span>
+            <ul class="top-level-menu">
+                <?php array_walk($menu->getMenu(), 'showMenu', 1); ?>
+            </ul>
         </div>
     </nav>
+    <br/>
     <header>
         <h1>Paweł Wiczyński</h1>
         <p>E-mail:	<a href="mailto:paweljanwiczynski@gmail.com">paweljanwiczynski@gmail.com</a></p>
@@ -135,49 +164,6 @@
                 </form>
             </section>
     </main>
-    <script type = "text/javascript">
-           function validate() {
-              document.querySelectorAll(".error").forEach(element => {
-                  element.innerHTML = "";
-              });
-              let result = true;
-              if (document.form.firstname.value == "") {
-                 document.getElementById("firstname_error").innerHTML = "Pole nie może być puste";
-                 document.form.firstname.focus() ;
-                 result = false;
-              }
-              if (document.form.lastname.value == "") {
-                 document.getElementById("lastname_error").innerHTML = "Pole nie może być puste";
-                 document.form.lastname.focus() ;
-                 result = false;
-              }
-              if (document.form.email.value == "" || !validateEmail(document.form.email.value)) {
-                 document.getElementById("email_error").innerHTML = "Pole musi zawierać poprawny adres email";
-                 document.form.email.focus() ;
-                 result = false;
-              }
-              if (!(document.form.gender.options[document.form.gender.selectedIndex].value == "man" || document.form.gender.options[document.form.gender.selectedIndex].value == "woman")) {
-                 document.getElementById("gender_error").innerHTML = "Pole musi zawierać poprawną wartość";
-                 document.form.gender.focus() ;
-                 result = false;
-              }
-              if (isNaN(parseInt(document.form.age.value)) || parseInt(document.form.age.value) < 18 || parseInt(document.form.age.value) > 99) {
-                 document.getElementById("age_error").innerHTML = "Wybierz wiek od 18 do 99";
-                 document.form.age.focus() ;
-                 result = false;
-              }
-              if (!document.form.policy.checked) {
-                 document.getElementById("policy_error").innerHTML = "Pole musi być zaznaczone";
-                 document.form.policy.focus() ;
-                 result = false;
-              }
-              return result;
-           }
-
-           function validateEmail(email) {
-                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                return re.test(String(email).toLowerCase());
-            }
-     </script>
+    <script src="script.js"></script>
 </body>
 </html>
