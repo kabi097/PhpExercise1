@@ -1,14 +1,14 @@
 <?php 
 
-require_once('src/Menu.php');
+require_once "bootstrap.php";
+require_once "src/Menu.php";
 
-$mysql_host = 'localhost'; 
-$port = '3307'; 
-$username = 'root';
-$password = 'pawelc24';
-$database = 'programa';
+try {
+    $menu = new Menu($conn['host'], 3307, $conn['user'], $conn['password'], $conn['dbname']);
+} catch(PDOException $e) {
+    $error = "Błąd! Nie udało się połączyć z bazą danych.";
+}
 
-$menu = new Menu($mysql_host, $port, $username, $password, $database);
 
 function showMenu($item, $key, $level) {
     $className = ($level>1) ? 'third-level-menu' : 'second-level-menu';
@@ -37,7 +37,12 @@ function showMenu($item, $key, $level) {
     <nav>
         <div id="menu">
             <ul class="top-level-menu">
-                <?php array_walk($menu->getMenu(), 'showMenu', 1); ?>
+                <?php if (isset($error)) {
+                    echo $error;
+                } else {
+                    array_walk($menu->getMenu(), 'showMenu', 1);
+                } 
+                ?>
             </ul>
         </div>
     </nav>
